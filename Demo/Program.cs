@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.InteropServices;
 
 namespace Demo
 {
@@ -25,17 +26,17 @@ internal class Program
     {
         #region HashTable
 
-        Hashtable Note = new Hashtable()
-        {
-            ["Ahmed"] = 33,
-            ["Mohamed"] = 66,
-            ["Ali"] = 99,
-        };
+        //Hashtable Note = new Hashtable()
+        //{
+        //    ["Ahmed"] = 33,
+        //    ["Mohamed"] = 66,
+        //    ["Ali"] = 99,
+        //};
 
-        foreach (DictionaryEntry item in Note)
-        {
-            Console.WriteLine($"Key {item.Key} Value = {item.Value}");
-        }
+        //foreach (DictionaryEntry item in Note)
+        //{
+        //    Console.WriteLine($"Key {item.Key} Value = {item.Value}");
+        //}
 
         ///Add
         ///Note.Add("Ahmed", 124); // Exception //Unsafe
@@ -51,17 +52,68 @@ internal class Program
 
         #region Dictionary  
 
-        Dictionary<string, int> NoteG = new Dictionary<string, int>();
-        NoteG.Add("aHMED", 31);
-        NoteG.Add("ADAFA", 414);
+        //Dictionary<string, int> NoteG = new Dictionary<string, int>();
+        //NoteG.Add("aHMED", 31);
+        //NoteG.Add("ADAFA", 414);
 
-        NoteG["Mahmoud"] = 31;
+        //NoteG["Mahmoud"] = 31;
 
-        foreach (var item in NoteG)
+        //foreach (var item in NoteG)
+        //{
+        //    Console.WriteLine(item.Key, item.Value);
+        //}
+
+        Dictionary<Employee, int> Emps = new Dictionary<Employee, int>();
+        Emps.Add(new Employee(42, "Ahmed"), 10);
+        Emps.Add(new Employee(41, "Mahmoud"), 10);
+
+
+
+        Emps.Add(new Employee(41, "Mahmoud"), 10);
+
+        foreach (var item in Emps)
         {
-            Console.WriteLine(item.Key, item.Value);
+            Console.WriteLine(item.Key);
         }
+
         #endregion
+
+    }
+
+    public class Employee : IEquatable<Employee>
+    {
+        public int ID { get; set; }
+        public string? Name { get; set; }
+
+        public Employee(int Id, string name)
+        {
+            ID = Id;
+            Name = name;
+        }
+
+        public override string ToString()
+        {
+            return $"{ID} {Name}";
+        }
+
+        bool IEquatable<Employee>.Equals(Employee? other)
+        {
+            if (other is null)
+                return false;
+            if ((this.Name != null && other.Name != null))
+                return this.ID.Equals(other.ID) && this.Name.Equals(other.Name);
+            else if (this.Name != null && other.Name == null)
+                return true;
+            else if (this.Name == null && other.Name == null)
+                return this.ID.Equals(other.ID);
+            else
+                return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID,Name);
+        }
     }
 }
 
